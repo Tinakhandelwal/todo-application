@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
+import BASE_URL from "./config"; // Import the base URL
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -16,7 +17,7 @@ function App() {
 
   const fetchTodos = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/todos/");
+      const response = await axios.get(`${BASE_URL}api/todos/`);
       setTodos(response.data);
     } catch (error) {
       console.error("Error fetching todos:", error);
@@ -28,7 +29,7 @@ function App() {
     if (!newTodo.trim()) return;
 
     try {
-      const response = await axios.post("http://localhost:8000/api/todos/", {
+      const response = await axios.post(`${BASE_URL}api/todos/`, {
         title: newTodo,
         completed: false,
       });
@@ -43,7 +44,7 @@ function App() {
   // Toggle To-Do Completed
   const toggleComplete = async (id, completed) => {
     try {
-      await axios.patch(`http://localhost:8000/api/todos/${id}/`, { completed: !completed });
+      await axios.patch(`${BASE_URL}api/todos/${id}/`, { completed: !completed });
       setTodos(todos.map(todo => (todo.id === id ? { ...todo, completed: !completed } : todo)));
     } catch (error) {
       console.error("Error updating todo:", error);
@@ -61,7 +62,7 @@ function App() {
     if (!editedTitle.trim()) return;
 
     try {
-      await axios.patch(`http://localhost:8000/api/todos/${id}/`, { title: editedTitle });
+      await axios.patch(`${BASE_URL}api/todos/${id}/`, { title: editedTitle });
       setTodos(todos.map(todo => (todo.id === id ? { ...todo, title: editedTitle } : todo)));
       setEditingTodo(null);
       setEditedTitle("");
@@ -73,7 +74,7 @@ function App() {
   // Delete To-Do
   const deleteTodo = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/api/todos/${id}/`);
+      await axios.delete(`${BASE_URL}api/todos/${id}/`);
       setTodos(todos.filter(todo => todo.id !== id));
     } catch (error) {
       console.error("Error deleting todo:", error);
